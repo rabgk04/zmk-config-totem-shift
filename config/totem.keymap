@@ -329,11 +329,11 @@
 
             // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
             //             ┌─────────┬─────────┬─────────┬─────────┬─────────┐                     ┌─────────┬─────────┬─────────┬─────────┬─────────┐
-            //             │  RESET  │  BT CLR │ OUT TOG │         │ BTSEL 0 │                     │   INS   │    F7   │    F8   │    F9   │   F12   │
+            //             │  RESET  │  BT CLR │ OUT TOG │  WIN ^  │ BTSEL 0 │                     │   INS   │    F7   │    F8   │    F9   │   F12   │
             //             ├─────────┼─────────┼─────────┼─────────┼─────────┤                     ├─────────┼─────────┼─────────┼─────────┼─────────┤
-            //             │  BOOTLD │ BT NEXT │         │         │ BTSEL 1 │                     │  SCRL   │    F4   │    F5   │    F6   │   F11   │
+            //             │  BOOTLD │ BT NEXT │  WIN <  │  WIN >  │ BTSEL 1 │                     │  SLCK   │    F4   │    F5   │    F6   │   F11   │
             //   ┌─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤                     ├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┐
-            //   │         │         │ BT PREV │         │         │ BTSEL 2 │                     │  PAUSE  │    F1   │    F2   │    F3   │   F10   │         │
+            //   │         │ CAPTURE │ BT PREV │ STUDIO  │  WIN v  │ BTSEL 2 │                     │  PAUSE  │    F1   │    F2   │    F3   │   F10   │         │
             //   └─────────┴─────────┴─────────┴─────────┼─────────┼─────────┼──────────┬┬─────────┼─────────┼─────────┼─────────┴─────────┴─────────┴─────────┘
             //                                           │         │         │  SPACE   ││         │         │         │ 
             //                                           └─────────┴─────────┴──────────┘└─────────┴─────────┴─────────┘
@@ -341,7 +341,7 @@
             bindings = <
         &sys_reset        &bt BT_CLR  &out OUT_TOG            &kp LG(LA(UP_ARROW))     &bt BT_SEL 0    &kp INSERT       &kp F7  &kp F8  &kp F9  &kp F12
         &bootloader       &bt BT_NXT  &kp LG(LA(LEFT_ARROW))  &kp LG(LA(RIGHT_ARROW))  &bt BT_SEL 1    &kp SLCK         &kp F4  &kp F5  &kp F6  &kp F11
-&trans  &region_capture2  &bt BT_PRV  &trans                  &kp LG(LA(DOWN_ARROW))   &bt BT_SEL 2    &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10  &trans
+&trans  &region_capture2  &bt BT_PRV  &studio_unlock          &kp LG(LA(DOWN_ARROW))   &bt BT_SEL 2    &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10  &trans
                                       &trans                  &trans                   &kp SPACE       &trans           &trans  &trans
             >;
         };
