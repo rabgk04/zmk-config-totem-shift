@@ -1,5 +1,7 @@
 {
-  "url": "https://github.com/GEIGEIGEIST/TOTEM",
+  "id": "totem-shift",
+  "name": "totem-shift",
+  "url": "https://github.com/Endracion/TOTEM-SHIFT",
   "layouts": {
     "LAYOUT": {
       "layout": [
@@ -46,5 +48,6 @@
         { "row": 3, "col":  9, "x": 10.037, "y": 3.714, "w": 1.059 }
       ]
     }
-  }
+  },
+  "sensors": []
 }

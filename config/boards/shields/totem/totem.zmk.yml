@@ -1,8 +1,8 @@
 file_format: "1"
-id: totem
+id: totem-shift
 name: TOTEM-SHIFT
 type: shield
-url: https://github.com/GEIGEIGEIST/TOTEM
+url: https://github.com/Endracion/TOTEM-SHIFT
 requires: [seeeduino_xiao_ble]
 features:
   - keys
