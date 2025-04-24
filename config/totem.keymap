@@ -259,19 +259,19 @@
             //   └─────────┴─────────┴─────────┴─────────┼─────────┼─────────┼──────────┬┬─────────┼─────────┼─────────┼─────────┴─────────┴─────────┴─────────┘
             //                                           │   COPY  │  PASTE  │  SPACE   ││  ENTER  │  BSPCE  │  DITTO  │  
             //                                           └─────────┴─────────┴──────────┘└─────────┴─────────┴─────────┘
-/*
+
             bindings = <
-           &kp Q  &kp W  &kp F      &kp P        &kp B          &kp J      &kp L     &kp U          &kp Y    &kp SEMI
-           &kp A  &kp R  &kp S      &kp T        &kp G          &kp M      &kp N     &kp E          &kp I    &kp O
-&lt 3 TAB  &kp Z  &kp X  &kp C      &kp D        &kp V          &kp K      &kp H     &kp COMMA      &kp DOT  &kp FSLH  &lc 2 SQT
-                         &kp LC(C)  &lt 2 LC(V)  &lt 1 SPACE    &lt 2 RET  &kp BSPC  &kp LC(GRAVE)
-            >; */
-			bindings = <
+           &kp Q  &kp W  &kp F      &kp P        &kp B          &kp J      &kp L      &kp U          &kp Y    &kp SEMI
+           &kp A  &kp R  &kp S      &kp T        &kp G          &kp M      &kp N      &kp E          &kp I    &kp O
+&lt 3 TAB  &kp Z  &kp X  &kp C      &kp D        &kp V          &kp K      &kp H      &kp COMMA      &kp DOT  &kp FSLH  &lc 2 SQT
+                         &kp LC(C)  &lt 2 LC(V)  &lt 1 SPACE    &lt 1 RET  &lt 2 BSPC &kp LC(GRAVE)
+            >;
+/*			bindings = <
               &kp Q       &kp W       &kp E          &kp R         &kp T        &kp Y    &kp U        &kp I        &kp O       &kp P
               &kp A 	  &kp S 	  &kp D  	     &kp F 		   &kp G        &kp H    &kp J  	  &kp K 	   &kp L  	   &kp SEMICOLON
 &lt 3 TAB	  &kp Z       &kp X       &kp C          &kp V         &kp B        &kp N    &kp M        &kp COMMA    &kp DOT     &kp SLASH           &lc 2 SQT
                                       &kp LC(C)  	 &lt 2 LC(V)   &lt 1 SPACE  &lt 2 RET  &kp BSPC   &kp MINUS
-            >;
+            >; */
         };
 
         // ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
