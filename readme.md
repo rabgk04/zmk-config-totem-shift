@@ -9,7 +9,7 @@
 # ZMK CONFIG FOR THE TOTEM-SHIFT SPLIT KEYBOARD
 
 [Here](https://github.com/Endracion/TOTEM-SHIFT) you can find my updated TOTEM-SHIFT hardware files.\
-[Here](https://github.com/GEIGEIGEIST/totem) you can find the original hardware files and build guide.\
+[Here](https://github.com/GEIGEIGEIST/totem) you can find the original hardware files and build guide.
 
 TOTEM-SHIFT is a modified 38 keys column-staggered split keyboard originally by GEIGEIGEIST running [ZMK](https://zmk.dev/). It's meant to be used with a SEEED XIAO BLE.
 
@@ -19,7 +19,10 @@ It includes these additional projects:
 
 ![TOTEM layout](/docs/images/TOTEM_layout.svg)
 
-| nice_nano_v2.overlay | display | 
+## Nice!Nano IO connect list:
+
+| nice_nano_v2.overlay | Display | 
+| :------------------- | :------ |
 | SPIM_SCK | SCL |
 | SPIM_MOSI | SDA |
 | cmd-data-gpios | DC |
