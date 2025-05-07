@@ -4,8 +4,8 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: caksoylar
       url-base: https://github.com/caksoylar
-    - name: tokyo2006
-      url-base: https://github.com/tokyo2006
+    - name: carrefinho
+      url-base: https://github.com/carrefinho
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -15,7 +15,7 @@ manifest:
       remote: caksoylar
       revision: main
     - name: prospector-zmk-module
-      remote: tokyo2006
-      revision: main
+      remote: carrefinho
+      revision: e9515cd
   self:
     path: config
