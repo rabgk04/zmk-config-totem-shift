@@ -4,16 +4,26 @@
   <img alt="TOTEM logo font" src="/docs/images/TOTEM_logo_bright.svg">
 </picture>
 
-# ZMK CONFIG FOR THE TOTEM SPLIT KEYBOARD
+<h1 align="center">T O T E M - S H I F T</h1>
 
-[Here](https://github.com/GEIGEIGEIST/totem) you can find the hardware files and build guide.\
-[Here](https://github.com/GEIGEIGEIST/qmk-config-totem) you can find the QMK config for the TOTEM.
+# ZMK CONFIG FOR THE TOTEM-SHIFT SPLIT KEYBOARD
 
-TOTEM is a 38 key column-staggered split keyboard running [ZMK](https://zmk.dev/) or [QMK](https://docs.qmk.fm/). It's meant to be used with a SEEED XIAO BLE or RP2040.
+[Here](https://github.com/Endracion/TOTEM-SHIFT) you can find my updated TOTEM-SHIFT hardware files.\
+[Here](https://github.com/GEIGEIGEIST/totem) you can find the original hardware files and build guide.\
 
+TOTEM-SHIFT is a modified 38 keys column-staggered split keyboard originally by GEIGEIGEIST running [ZMK](https://zmk.dev/). It's meant to be used with a SEEED XIAO BLE.
+
+It includes these additional projects:
+- caksoylar's [RGB LED Widget](https://github.com/caksoylar/zmk-rgbled-widget)
+- carrefinho's [Prospector Dongle along with tokyo2006's nice!nano v2 compatibility](https://github.com/tokyo2006/prospector-zmk-module/tree/support_nicenano)
 
 ![TOTEM layout](/docs/images/TOTEM_layout.svg)
 
+| nice_nano_v2.overlay | display | 
+| SPIM_SCK | SCL |
+| SPIM_MOSI | SDA |
+| cmd-data-gpios | DC |
+| reset-gpios | RES |
 
 
 ## HOW TO USE
