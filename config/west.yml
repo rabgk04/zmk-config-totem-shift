@@ -16,6 +16,6 @@ manifest:
       revision: main
     - name: prospector-zmk-module
       remote: tokyo2006
-      revision: support_nicenano
+      revision: micro_spi2
   self:
     path: config
