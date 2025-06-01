@@ -4,7 +4,6 @@ name: TOTEM-SHIFT
 type: shield
 url: https://github.com/Endracion/TOTEM-SHIFT
 requires: [seeeduino_xiao_ble]
-requires: [nice_nano_v2]
 features:
   - keys
 siblings:
