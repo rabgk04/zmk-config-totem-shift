@@ -334,7 +334,7 @@
         function_layer {
             // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 
-            display-name = "Function";
+            display-name = "Fn";
 			label = "FUNCTION";
 
             // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
