@@ -5,12 +5,12 @@ include:
   - board: seeeduino_xiao_ble
     shield: totem_right rgbled_adapter
     artifact-name: totem_shift_right
-  - board: seeeduino_xiao_ble
+  - board: nice_nano_v2
     shield: totem_dongle prospector_adapter
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y
-    artifact-name: xiao_prospector_dongle
-  - board: seeeduino_xiao_ble
+    artifact-name: nicenano_prospector_dongle
+  - board: nice_nano_v2
     shield: settings_reset
-    artifact-name: xiao_reset_settings
+    artifact-name: nicenano_reset_settings
 # there is no settingsreset (needed) for the XIAO

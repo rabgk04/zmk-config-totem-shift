@@ -4,18 +4,18 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: caksoylar
       url-base: https://github.com/caksoylar
-    - name: carrefinho
-      url-base: https://github.com/carrefinho
+    - name: tokyo2006
+      url-base: https://github.com/tokyo2006
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: v0.3.0
       import: app/west.yml
     - name: zmk-rgbled-widget
       remote: caksoylar
       revision: main
     - name: prospector-zmk-module
-      remote: carrefinho
-      revision: main
+      remote: tokyo2006
+      revision: support_nicenano
   self:
     path: config
