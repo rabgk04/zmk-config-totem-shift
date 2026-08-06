@@ -13,7 +13,7 @@ manifest:
       import: app/west.yml
     - name: zmk-rgbled-widget
       remote: caksoylar
-      revision: main
+      revision: fbe6dde8ffa68fdcded1600a66aa18cf12a796fb
     - name: prospector-zmk-module
       remote: tokyo2006
       revision: support_nicenano
