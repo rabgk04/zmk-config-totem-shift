@@ -197,6 +197,13 @@
             layers = <0 1 2 3>;
         };
 
+        combo_studio_unlock {
+            timeout-ms = <50>;
+            key-positions = <13 16>;
+            layers = <0>;
+            bindings = <&studio_unlock>;
+        };
+
         /* 			combo_copy {
                 timeout-ms = <50>;
                 key-positions = <5 31 24>;
@@ -351,7 +358,7 @@
             bindings = <
         &sys_reset        &bt BT_CLR  &out OUT_TOG            &kp LG(LA(UP_ARROW))     &bt BT_SEL 0    &kp INSERT       &kp F7  &kp F8  &kp F9  &kp F12
         &bootloader       &bt BT_NXT  &kp LG(LA(LEFT_ARROW))  &kp LG(LA(RIGHT_ARROW))  &bt BT_SEL 1    &kp SLCK         &kp F4  &kp F5  &kp F6  &kp F11
-&trans  &region_capture2  &bt BT_PRV  &studio_unlock          &kp LG(LA(DOWN_ARROW))   &bt BT_SEL 2    &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10  &trans
+&trans  &region_capture2  &bt BT_PRV  &trans                  &kp LG(LA(DOWN_ARROW))   &bt BT_SEL 2    &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10  &trans
                                       &trans                  &trans                   &kp SPACE       &trans           &trans  &trans
             >;
         };
