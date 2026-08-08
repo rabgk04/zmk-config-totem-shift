@@ -10,4 +10,5 @@ zmk-rgbled-widget/
 
 # Build outputs
 build/
+build-*/
 *.uf2
