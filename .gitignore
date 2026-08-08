@@ -1,0 +1,13 @@
+# West/Zephyr build artifacts and dependencies
+.west/
+modules/
+zephyr/
+zmk/
+
+# External ZMK modules managed by west
+prospector-zmk-module/
+zmk-rgbled-widget/
+
+# Build outputs
+build/
+*.uf2
