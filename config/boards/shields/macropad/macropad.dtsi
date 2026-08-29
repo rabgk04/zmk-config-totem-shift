@@ -67,7 +67,7 @@
 &i2c0 {
     status = "okay";
 
-    encoder: sensor_mt6701 {
+    encoder: encoder@06 {
         compatible = "mag,mt6701";
         reg = <0x06>;
         poll-period-ms = <5>;
