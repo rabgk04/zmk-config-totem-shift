@@ -2,7 +2,7 @@ file_format: "1"
 id: macropad
 name: MACROPAD
 type: shield
-requires: [nrfmicro_13]
+requires: [nice_nano_v2]
 features:
   - keys
 siblings:
