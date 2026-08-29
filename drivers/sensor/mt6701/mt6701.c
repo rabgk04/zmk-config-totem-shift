@@ -19,7 +19,10 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #define MT6701_ANGLE_REG 0x03
 #define MT6701_ANGLE_BITS 14
-#define MT6701_ANGLE_MAX (1U << MT6701_ANGLE_BITS)
+/* Deliberately signed: these are compared against a signed delta below. As unsigned
+ * they would drag the delta through the usual arithmetic conversions and make the
+ * wrap correction fire on every value, including zero. */
+#define MT6701_ANGLE_MAX (1 << MT6701_ANGLE_BITS)
 #define MT6701_ANGLE_HALF (MT6701_ANGLE_MAX / 2)
 #define MT6701_MICRODEG_PER_ROTATION 360000000LL
 #define MICRODEG_PER_DEGREE 1000000LL
@@ -68,7 +71,7 @@ static bool mt6701_accumulate(const struct device *dev) {
         return false;
     }
 
-    int16_t delta = raw - data->prev_angle;
+    int32_t delta = (int32_t)raw - (int32_t)data->prev_angle;
     if (delta > MT6701_ANGLE_HALF) {
         delta -= MT6701_ANGLE_MAX;
     } else if (delta < -MT6701_ANGLE_HALF) {
