@@ -13,4 +13,7 @@ include:
   - board: nice_nano_v2
     shield: settings_reset
     artifact-name: nicenano_reset_settings
+  - board: nrfmicro_13
+    shield: macropad
+    artifact-name: macropad_nrfmicro
 # there is no settingsreset (needed) for the XIAO

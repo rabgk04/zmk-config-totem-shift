@@ -1,0 +1,9 @@
+file_format: "1"
+id: macropad
+name: MACROPAD
+type: shield
+requires: [nrfmicro_13]
+features:
+  - keys
+siblings:
+  - macropad
