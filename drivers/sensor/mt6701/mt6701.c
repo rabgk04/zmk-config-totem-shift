@@ -14,6 +14,7 @@
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/sys/util.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
@@ -30,6 +31,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 struct mt6701_config {
     struct i2c_dt_spec i2c;
     uint16_t poll_period_ms;
+    uint16_t max_backlog_degrees;
+    uint16_t min_report_interval_ms;
 };
 
 struct mt6701_data {
@@ -43,6 +46,7 @@ struct mt6701_data {
 
     bool initialized;
     uint16_t prev_angle;
+    int64_t last_report_time;
     /* Rotation not yet handed to the keymap, in microdegrees. Sub-degree motion stays
      * here between polls instead of being reported, so channel_get can always return
      * whole degrees in val1 with an empty val2. */
@@ -84,10 +88,27 @@ static bool mt6701_accumulate(const struct device *dev) {
     }
 
     int64_t microdeg = (int64_t)delta * MT6701_MICRODEG_PER_ROTATION / MT6701_ANGLE_MAX;
+    int64_t now = k_uptime_get();
 
     k_spinlock_key_t key = k_spin_lock(&data->lock);
     data->pending_microdeg += microdeg;
-    bool ready = llabs(data->pending_microdeg) >= MICRODEG_PER_DEGREE;
+
+    /* Rate limiting, not smoothing. zmk,behavior-sensor-rotate turns every trigger into a
+     * press/release pair on the shared behavior queue, which holds
+     * CONFIG_ZMK_BEHAVIORS_QUEUE_SIZE entries and drains only one trigger per tap-ms. On
+     * overflow k_msgq_put drops the item and the sensor-rotate behavior ignores the error.
+     * Losing a release leaves &msc's speed accumulator non-zero, so its tick work reschedules
+     * itself forever and the wheel scrolls until the board is reset. A detent-free magnetic
+     * knob spins well past that drain rate, so cap both the burst size and how often we hand
+     * work to the keymap. Fast spins saturate the scroll rate instead of latching it on. */
+    int64_t max_backlog = (int64_t)cfg->max_backlog_degrees * MICRODEG_PER_DEGREE;
+    data->pending_microdeg = CLAMP(data->pending_microdeg, -max_backlog, max_backlog);
+
+    bool ready = llabs(data->pending_microdeg) >= MICRODEG_PER_DEGREE &&
+                 (now - data->last_report_time) >= cfg->min_report_interval_ms;
+    if (ready) {
+        data->last_report_time = now;
+    }
     k_spin_unlock(&data->lock, key);
 
     LOG_DBG("MT6701 raw=%u delta=%d pending_udeg=%lld", raw, delta,
@@ -185,7 +206,7 @@ static int mt6701_init(const struct device *dev) {
     static struct mt6701_data mt6701_data_##n;                                                     \
     static const struct mt6701_config mt6701_config_##n = {                                        \
         .i2c = I2C_DT_SPEC_INST_GET(n),                                                            \
-        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                                         \
+        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                                                 .max_backlog_degrees = DT_INST_PROP(n, max_backlog_degrees),                                       .min_report_interval_ms = DT_INST_PROP(n, min_report_interval_ms),                         \
     };                                                                                             \
     DEVICE_DT_INST_DEFINE(n, mt6701_init, NULL, &mt6701_data_##n, &mt6701_config_##n, POST_KERNEL, \
                           CONFIG_SENSOR_INIT_PRIORITY, &mt6701_driver_api);
