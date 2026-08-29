@@ -10,7 +10,8 @@ properties:
   poll-period-ms:
     type: int
     default: 5
-    description: Polling interval in milliseconds  max-backlog-degrees:
+    description: Polling interval in milliseconds
+  max-backlog-degrees:
     type: int
     default: 15
     description: |
