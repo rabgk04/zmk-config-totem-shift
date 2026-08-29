@@ -7,6 +7,7 @@
 #define DT_DRV_COMPAT mag_mt6701
 
 #include <errno.h>
+#include <stdlib.h>
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/i2c.h>
@@ -34,15 +35,66 @@ struct mt6701_data {
     const struct device *dev;
 
     struct k_work_delayable work;
+    struct k_spinlock lock;
     uint16_t poll_period_ms;
 
     bool initialized;
     uint16_t prev_angle;
-    int32_t accumulated_steps;
+    /* Rotation not yet handed to the keymap, in microdegrees. Sub-degree motion stays
+     * here between polls instead of being reported, so channel_get can always return
+     * whole degrees in val1 with an empty val2. */
+    int64_t pending_microdeg;
 };
 
+/* Reads the angle register and folds the movement since the last read into
+ * pending_microdeg. Returns true once at least a whole degree has piled up. */
+static bool mt6701_accumulate(const struct device *dev) {
+    const struct mt6701_config *cfg = dev->config;
+    struct mt6701_data *data = dev->data;
+
+    uint8_t buf[2];
+    int ret = i2c_burst_read_dt(&cfg->i2c, MT6701_ANGLE_REG, buf, sizeof(buf));
+    if (ret < 0) {
+        LOG_ERR("Failed to read MT6701 angle register: %d", ret);
+        return false;
+    }
+
+    uint16_t raw = ((uint16_t)buf[0] << 6) | (buf[1] >> 2);
+    raw &= MT6701_ANGLE_MAX - 1;
+
+    if (!data->initialized) {
+        data->initialized = true;
+        data->prev_angle = raw;
+        return false;
+    }
+
+    int16_t delta = raw - data->prev_angle;
+    if (delta > MT6701_ANGLE_HALF) {
+        delta -= MT6701_ANGLE_MAX;
+    } else if (delta < -MT6701_ANGLE_HALF) {
+        delta += MT6701_ANGLE_MAX;
+    }
+    data->prev_angle = raw;
+
+    if (delta == 0) {
+        return false;
+    }
+
+    int64_t microdeg = (int64_t)delta * MT6701_MICRODEG_PER_ROTATION / MT6701_ANGLE_MAX;
+
+    k_spinlock_key_t key = k_spin_lock(&data->lock);
+    data->pending_microdeg += microdeg;
+    bool ready = llabs(data->pending_microdeg) >= MICRODEG_PER_DEGREE;
+    k_spin_unlock(&data->lock, key);
+
+    LOG_DBG("MT6701 raw=%u delta=%d pending_udeg=%lld", raw, delta,
+            (long long)data->pending_microdeg);
+
+    return ready;
+}
+
 static void mt6701_poll_work_cb(struct k_work *work) {
-    struct k_work_delayable *dwork = CONTAINER_OF(work, struct k_work_delayable, work);
+    struct k_work_delayable *dwork = k_work_delayable_from_work(work);
     struct mt6701_data *data = CONTAINER_OF(dwork, struct mt6701_data, work);
 
     int ret = k_work_reschedule(dwork, K_MSEC(data->poll_period_ms));
@@ -50,9 +102,7 @@ static void mt6701_poll_work_cb(struct k_work *work) {
         LOG_WRN("Failed to reschedule MT6701 poll: %d", ret);
     }
 
-    LOG_DBG("MT6701 poll tick");
-
-    if (data->handler) {
+    if (mt6701_accumulate(data->dev) && data->handler) {
         data->handler(data->dev, data->trigger);
     }
 }
@@ -75,41 +125,11 @@ static int mt6701_trigger_set(const struct device *dev, const struct sensor_trig
 }
 
 static int mt6701_sample_fetch(const struct device *dev, enum sensor_channel chan) {
-    const struct mt6701_config *cfg = dev->config;
-    struct mt6701_data *data = dev->data;
-
     if (chan != SENSOR_CHAN_ALL && chan != SENSOR_CHAN_ROTATION) {
         return -ENOTSUP;
     }
 
-    uint8_t buf[2];
-    int ret = i2c_burst_read_dt(&cfg->i2c, MT6701_ANGLE_REG, buf, sizeof(buf));
-    if (ret < 0) {
-        LOG_ERR("Failed to read MT6701 angle register: %d", ret);
-        return ret;
-    }
-
-    uint16_t raw = ((uint16_t)buf[0] << 6) | (buf[1] >> 2);
-    raw &= MT6701_ANGLE_MAX - 1;
-
-    LOG_DBG("MT6701 raw=%u", raw);
-
-    if (!data->initialized) {
-        data->initialized = true;
-        data->prev_angle = raw;
-        return 0;
-    }
-
-    int16_t delta = raw - data->prev_angle;
-    if (delta > MT6701_ANGLE_HALF) {
-        delta -= MT6701_ANGLE_MAX;
-    } else if (delta < -MT6701_ANGLE_HALF) {
-        delta += MT6701_ANGLE_MAX;
-    }
-
-    data->accumulated_steps += delta;
-    data->prev_angle = raw;
-
+    /* The poll work already sampled the sensor; nothing to do here. */
     return 0;
 }
 
@@ -121,13 +141,17 @@ static int mt6701_channel_get(const struct device *dev, enum sensor_channel chan
         return -ENOTSUP;
     }
 
-    int64_t microdegrees =
-        (int64_t)data->accumulated_steps * MT6701_MICRODEG_PER_ROTATION / MT6701_ANGLE_MAX;
+    k_spinlock_key_t key = k_spin_lock(&data->lock);
+    int32_t degrees = (int32_t)(data->pending_microdeg / MICRODEG_PER_DEGREE);
+    data->pending_microdeg -= (int64_t)degrees * MICRODEG_PER_DEGREE;
+    k_spin_unlock(&data->lock, key);
 
-    val->val1 = microdegrees / MICRODEG_PER_DEGREE;
-    val->val2 = microdegrees % MICRODEG_PER_DEGREE;
+    /* zmk,behavior-sensor-rotate treats a zero val1 as the legacy "val2 holds a raw
+     * trigger count" encoding, so the fractional degree must never leak into val2. */
+    val->val1 = degrees;
+    val->val2 = 0;
 
-    data->accumulated_steps = 0;
+    LOG_DBG("MT6701 reporting %d degrees", degrees);
 
     return 0;
 }
