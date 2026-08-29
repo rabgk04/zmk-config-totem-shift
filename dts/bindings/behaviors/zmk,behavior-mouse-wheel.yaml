@@ -1,3 +1,0 @@
-description: Emit a relative mouse wheel report each time the behavior is pressed
-compatible: "zmk,behavior-mouse-wheel"
-include: one_param.yaml
