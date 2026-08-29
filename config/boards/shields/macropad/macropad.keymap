@@ -16,6 +16,12 @@
             require-prior-idle-ms = <125>;
             bindings = <&mo>, <&mkp>;
         };
+
+        wheel_rotate: sensor_scroll {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&mkp SCRL_DOWN &mkp SCRL_UP>;
+        };
     };
 
     keymap {
@@ -26,7 +32,7 @@
             bindings = <
         &kp LSHFT    &kp LCTRL    &kp F5    &lm FN MCLK
             >;
-            sensor-bindings = <&inc_dec_kp C_AC_SCROLL_DOWN C_AC_SCROLL_UP>;
+            sensor-bindings = <&wheel_rotate>;
         };
 
         fn_layer {
