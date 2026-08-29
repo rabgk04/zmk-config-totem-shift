@@ -50,6 +50,8 @@ static void mt6701_poll_work_cb(struct k_work *work) {
         LOG_WRN("Failed to reschedule MT6701 poll: %d", ret);
     }
 
+    LOG_DBG("MT6701 poll tick");
+
     if (data->handler) {
         data->handler(data->dev, data->trigger);
     }
@@ -89,6 +91,8 @@ static int mt6701_sample_fetch(const struct device *dev, enum sensor_channel cha
 
     uint16_t raw = ((uint16_t)buf[0] << 6) | (buf[1] >> 2);
     raw &= MT6701_ANGLE_MAX - 1;
+
+    LOG_DBG("MT6701 raw=%u", raw);
 
     if (!data->initialized) {
         data->initialized = true;
