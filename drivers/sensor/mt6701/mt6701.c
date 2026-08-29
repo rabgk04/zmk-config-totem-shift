@@ -34,6 +34,7 @@ struct mt6701_data {
     const struct device *dev;
 
     struct k_work_delayable work;
+    uint16_t poll_period_ms;
 
     bool initialized;
     uint16_t prev_angle;
@@ -43,6 +44,11 @@ struct mt6701_data {
 static void mt6701_poll_work_cb(struct k_work *work) {
     struct k_work_delayable *dwork = CONTAINER_OF(work, struct k_work_delayable, work);
     struct mt6701_data *data = CONTAINER_OF(dwork, struct mt6701_data, work);
+
+    int ret = k_work_reschedule(dwork, K_MSEC(data->poll_period_ms));
+    if (ret < 0) {
+        LOG_WRN("Failed to reschedule MT6701 poll: %d", ret);
+    }
 
     if (data->handler) {
         data->handler(data->dev, data->trigger);
@@ -100,11 +106,6 @@ static int mt6701_sample_fetch(const struct device *dev, enum sensor_channel cha
     data->accumulated_steps += delta;
     data->prev_angle = raw;
 
-    ret = k_work_reschedule(&data->work, K_MSEC(cfg->poll_period_ms));
-    if (ret < 0) {
-        LOG_WRN("Failed to reschedule MT6701 poll: %d", ret);
-    }
-
     return 0;
 }
 
@@ -137,14 +138,14 @@ static int mt6701_init(const struct device *dev) {
     const struct mt6701_config *cfg = dev->config;
     struct mt6701_data *data = dev->data;
 
-    if (!device_is_ready(cfg->i2c.bus)) {
-        LOG_ERR("I2C bus not ready");
-        return -ENODEV;
-    }
-
     data->dev = dev;
+    data->poll_period_ms = cfg->poll_period_ms;
 
     k_work_init_delayable(&data->work, mt6701_poll_work_cb);
+
+    if (!device_is_ready(cfg->i2c.bus)) {
+        LOG_WRN("I2C bus not ready at MT6701 init; polling will start as soon as it is");
+    }
 
     return 0;
 }
