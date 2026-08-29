@@ -22,4 +22,9 @@ config ZMK_SPLIT
 config ZMK_BLE
     default y
 
+# The shared keymap binds &msc / &mkp on the macropad positions, so every build
+# of it needs the pointing behaviors compiled in, peripherals included.
+config ZMK_POINTING
+    default y
+
 endif

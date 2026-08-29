@@ -17,4 +17,27 @@
         rows = <0>;
         events = <0>;
     };
+
+    /* The wheel lives on the totem_macropad peripheral, but the central is what
+     * runs the keymap, so it needs a sensor at the same index the peripheral
+     * reports (0). ZMK builds these with DEVICE_DT_GET_OR_NULL and skips arming
+     * a trigger when there is no local device ("No local device for %d"), which
+     * is exactly the dongle case -- the events arrive over the split link. */
+    sensors: keymap_sensors {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&remote_encoder>;
+        triggers-per-rotation = <24>;
+    };
+
+    /* Anchor only -- the real MT6701 is on the macropad peripheral. No compatible
+     * and no bus, so nothing tries to bind a driver to it, and status = "disabled"
+     * sends DEVICE_DT_GET_OR_NULL down its NULL branch instead of emitting a
+     * DEVICE_DT_GET that would fail to link.
+     *
+     * Deliberately NOT an i2c0 child: prospector_adapter enables &i2c0 for its
+     * apds9960 light sensor, so touching that bus here would break the display's
+     * auto-brightness. */
+    remote_encoder: remote_encoder {
+        status = "disabled";
+    };
 };

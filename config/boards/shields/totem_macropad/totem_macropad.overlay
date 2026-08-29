@@ -1,0 +1,61 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Macropad as a split peripheral of the prospector dongle. It shares the totem's
+ * matrix transform so its key positions (38-41) are globally unique across the
+ * three peripherals -- ZMK has no per-peripheral position offset, so a peripheral's
+ * position is taken by the central as a literal keymap index.
+ */
+
+#include "../totem/totem.dtsi"
+
+/* Shifts this board's 4x4 kscan from rows 0-3 into the transform's rows 4-7,
+ * which is where totem.dtsi maps positions 38-41. The existing wiring is
+ * unchanged; only the coordinates the transform sees move. */
+&default_transform {
+    row-offset = <4>;
+};
+
+&kscan0 {
+    compatible = "zmk,kscan-gpio-matrix";
+    wakeup-source;
+    diode-direction = "col2row";
+
+    col-gpios
+        = <&pro_micro 5 GPIO_ACTIVE_HIGH>
+        , <&pro_micro 7 GPIO_ACTIVE_HIGH>
+        , <&pro_micro 14 GPIO_ACTIVE_HIGH>
+        , <&pro_micro 18 GPIO_ACTIVE_HIGH>
+        ;
+
+    row-gpios
+        = <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&pro_micro 16 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&pro_micro 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        ;
+};
+
+/ {
+    /* Sensor index 0 here must line up with index 0 on the dongle: the peripheral
+     * sends its local sensor_index and the central looks it up in its own list. */
+    sensors: keymap_sensors {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&encoder>;
+        triggers-per-rotation = <24>;
+    };
+};
+
+/* nice_nano_v2's i2c0 pinctrl already maps to the MT6701 wiring:
+ *   SDA = D2 / P0.17, SCL = D3 / P0.20
+ * so no pinctrl override is needed here. */
+&i2c0 {
+    status = "okay";
+
+    encoder: encoder@6 {
+        compatible = "mag,mt6701";
+        reg = <0x06>;
+        poll-period-ms = <5>;
+        status = "okay";
+    };
+};

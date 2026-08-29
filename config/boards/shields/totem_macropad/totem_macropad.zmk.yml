@@ -1,9 +1,10 @@
 file_format: "1"
-id: macropad
-name: MACROPAD
+id: totem_macropad
+name: TOTEM-MACROPAD
 type: shield
 requires: [nice_nano_v2]
 features:
   - keys
+  - encoder
 siblings:
-  - macropad
+  - totem_macropad

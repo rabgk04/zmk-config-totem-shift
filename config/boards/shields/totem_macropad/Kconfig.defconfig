@@ -1,0 +1,20 @@
+# Copyright (c) 2026 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+if SHIELD_TOTEM_MACROPAD
+
+config ZMK_KEYBOARD_NAME
+    default "TOTEM-MACROPAD"
+
+# Peripheral of the prospector dongle: no central role, no USB HID.
+config ZMK_SPLIT
+    default y
+
+config ZMK_BLE
+    default y
+
+# The shared keymap binds &msc / &mkp on the macropad positions.
+config ZMK_POINTING
+    default y
+
+endif
