@@ -1,0 +1,11 @@
+# Copyright (c) 2026 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+config MT6701
+    bool "MT6701 14-bit Magnetic Angle Sensor"
+    default y
+    depends on DT_HAS_MAG_MT6701_ENABLED
+    depends on I2C
+    help
+      Enable driver for the Magntek MT6701 14-bit magnetic angle sensor,
+      accessed over I2C at 7-bit address 0x06.

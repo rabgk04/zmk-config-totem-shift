@@ -1,0 +1,13 @@
+description: |
+  Sensor driver for the Magntek MT6701 14-bit magnetic angle sensor,
+  accessed over I2C at 7-bit address 0x06.
+
+compatible: "mag,mt6701"
+
+include: [i2c-device.yaml]
+
+properties:
+  poll-period-ms:
+    type: int
+    default: 5
+    description: Polling interval in milliseconds

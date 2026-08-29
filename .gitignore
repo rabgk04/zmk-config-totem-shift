@@ -1,7 +1,8 @@
 # West/Zephyr build artifacts and dependencies
 .west/
 modules/
-zephyr/
+zephyr/*
+!zephyr/module.yml
 zmk/
 
 # External ZMK modules managed by west

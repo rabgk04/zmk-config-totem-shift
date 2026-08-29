@@ -1,0 +1,4 @@
+# Device tree binding vendor prefix registry for this ZMK module.
+# Format: <vendor-prefix><TAB><Full name of vendor>
+
+mag	Magntek

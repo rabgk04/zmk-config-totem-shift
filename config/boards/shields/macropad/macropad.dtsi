@@ -43,14 +43,6 @@
             ;
     };
 
-    encoder: sensor_mt6701 {
-        compatible = "alps,ec11";
-        a-gpios = <&pro_micro 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        b-gpios = <&pro_micro 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        steps = <4096>;
-        status = "okay";
-    };
-
     sensors: keymap_sensors {
         compatible = "zmk,keymap-sensors";
         sensors = <&encoder>;
@@ -69,5 +61,16 @@
             , <&key_physical_attrs 100 100  200 0   0   0  0>
             , <&key_physical_attrs 100 100  300 0   0   0  0>
             ;
+    };
+};
+
+&i2c0 {
+    status = "okay";
+
+    encoder: sensor_mt6701 {
+        compatible = "mag,mt6701";
+        reg = <0x06>;
+        poll-period-ms = <5>;
+        status = "okay";
     };
 };
