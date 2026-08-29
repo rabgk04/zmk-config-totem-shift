@@ -9,6 +9,8 @@
     chosen {
         zmk,kscan = &kscan0;
         zmk,physical-layout = &default_layout;
+        zephyr,console = &snippet_zmk_usb_logging_uart;
+        zephyr,shell-uart = &snippet_zmk_usb_logging_uart;
     };
 
     default_transform: keymap_transform_0 {
@@ -67,10 +69,16 @@
 &i2c0 {
     status = "okay";
 
-    encoder: encoder@06 {
+    encoder: encoder@6 {
         compatible = "mag,mt6701";
         reg = <0x06>;
         poll-period-ms = <5>;
         status = "okay";
+    };
+};
+
+&zephyr_udc0 {
+    snippet_zmk_usb_logging_uart: snippet_zmk_usb_logging_uart {
+        compatible = "zephyr,cdc-acm-uart";
     };
 };
